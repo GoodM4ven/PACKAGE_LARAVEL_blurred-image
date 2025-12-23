@@ -4,8 +4,8 @@
 # blurred-image
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/goodm4ven/blurred-image.svg?style=for-the-badge&color=gray)](https://packagist.org/packages/goodm4ven/blurred-image)
-[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/goodm4ven/blurred-image/pest.yml?branch=main&label=tests&style=for-the-badge&color=forestgreen)](https://github.com/goodm4ven/blurred-image/actions?query=workflow%3Apest+branch%3Amain)
-[![Coverage Status](https://img.shields.io/codecov/c/github/goodm4ven/blurred-image/main?style=for-the-badge&color=purple)](https://codecov.io/gh/goodm4ven/blurred-image)
+[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/goodm4ven/PACKAGE_LARAVEL_blurred-image/pest.yml?branch=main&label=tests&style=for-the-badge&color=forestgreen)](https://github.com/goodm4ven/PACKAGE_LARAVEL_blurred-image/actions?query=workflow%3Apest+branch%3Amain)
+[![Coverage Status](https://img.shields.io/codecov/c/github/goodm4ven/PACKAGE_LARAVEL_blurred-image/main?style=for-the-badge&color=purple)](https://codecov.io/gh/goodm4ven/PACKAGE_LARAVEL_blurred-image)
 [![Total Downloads](https://img.shields.io/packagist/dt/goodm4ven/blurred-image.svg?style=for-the-badge&color=blue)](https://packagist.org/packages/goodm4ven/blurred-image)
 
 <img src="./.github/images/banner.png">
