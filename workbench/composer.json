@@ -1,0 +1,8 @@
+{
+    "name": "workbench/app",
+    "autoload": {
+        "psr-4": {
+            "Workbench\\App\\": "app/"
+        }
+    }
+}

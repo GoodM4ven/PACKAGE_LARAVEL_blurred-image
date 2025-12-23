@@ -1,0 +1,125 @@
+{
+    "name": ":vendor_slug/:package_slug",
+    "description": ":package_description",
+    "keywords": [
+        "laravel",
+        "tallstack",
+        ":vendor_slug",
+        ":package_slug"
+    ],
+    "homepage": "https://github.com/:vendor_slug/:package_slug",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": ":author_name",
+            "email": "author@domain.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^8.4||^8.3",
+        "goodm4ven/anvil": "^1.0",
+        "goodm4ven/tailwind-merge": "^1.0",
+        "laravel/boost": "^1.8",
+        "livewire/livewire": "^3.7",
+        "illuminate/contracts": "^11.0||^12.0",
+        "illuminate/support": "^11.0||^12.0",
+        "spatie/laravel-package-tools": "^1.16"
+    },
+    "require-dev": {
+        "larastan/larastan": "^3.0",
+        "laravel/pint": "^1.14",
+        "nunomaduro/collision": "^8.8",
+        "orchestra/testbench": "^10.0.0||^9.0.0",
+        "pestphp/pest": "^4.0",
+        "pestphp/pest-plugin-arch": "^4.0",
+        "pestphp/pest-plugin-browser": "^4.1",
+        "pestphp/pest-plugin-laravel": "^4.0",
+        "phpstan/extension-installer": "^1.4",
+        "phpstan/phpstan-deprecation-rules": "^2.0",
+        "phpstan/phpstan-phpunit": "^2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "VendorName\\Skeleton\\": "src/",
+            "VendorName\\Skeleton\\Database\\Factories\\": "database/factories/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "VendorName\\Skeleton\\Tests\\": "tests/",
+            "Workbench\\App\\": "workbench/app/",
+            "Workbench\\Database\\Factories\\": "workbench/database/factories/",
+            "Workbench\\Database\\Seeders\\": "workbench/database/seeders/"
+        }
+    },
+    "scripts": {
+        "post-autoload-dump": [
+            "@prepareback"
+        ],
+        "sync-workbench-env": [
+            "@php workbench/sync-workbench-env.php"
+        ],
+        "prepareback": [
+            "@php vendor/bin/testbench package:purge-skeleton --ansi",
+            "@sync-workbench-env",
+            "@php vendor/bin/testbench workbench:create-sqlite-db",
+            "@php vendor/bin/testbench package:discover --ansi",
+            "@php vendor/bin/testbench migrate:refresh --force",
+            "@php vendor/bin/testbench optimize:clear",
+            "@php vendor/bin/testbench workbench:build --ansi"
+        ],
+        "preparefront": [
+            "npm run build"
+        ],
+        "format": [
+            "npm run format:blade",
+            "npm run format:prettier",
+            "vendor/bin/pint"
+        ],
+        "analyse": "vendor/bin/phpstan analyse",
+        "lint": [
+            "@format",
+            "@analyse"
+        ],
+        "publishfront": [
+            "@php vendor/bin/testbench vendor:publish --tag=:package_slug-assets --force"
+        ],
+        "serve": [
+            "Composer\\Config::disableProcessTimeout",
+            "@prepareback",
+            "@preparefront",
+            "@publishfront",
+            "@php vendor/bin/testbench serve --ansi"
+        ],
+        "test": "vendor/bin/pest",
+        "testel": "vendor/bin/pest --parallel",
+        "testcov": "vendor/bin/pest --coverage",
+        "green": [
+            "@prepareback",
+            "@preparefront",
+            "@publishfront",
+            "@lint",
+            "@test"
+        ]
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true,
+            "phpstan/extension-installer": true
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "VendorName\\Skeleton\\SkeletonServiceProvider"
+            ],
+            "aliases": {
+                "Skeleton": "VendorName\\Skeleton\\Facades\\Skeleton"
+            }
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

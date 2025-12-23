@@ -1,0 +1,31 @@
+{
+    "$schema": "https://www.schemastore.org/package.json",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "format:blade": "blade-formatter --write --config .bladeformatterrc \"resources/views/**/*.blade.php\" \"workbench/resources/views/**/*.blade.php\"",
+        "format:prettier": "prettier --write --config .prettierrc \"resources/{css,js}/**/*.{css,js}\" \"workbench/resources/**/*.{css,js}\"",
+        "build": "npm run build:package && npm run build:demo",
+        "build:package": "npm run build:package:css && npm run build:package:js",
+        "build:package:css": "tailwindcss -i resources/css/:package_name.css -o resources/dist/:package_name.css --minify",
+        "build:package:js": "esbuild resources/js/:package_name.js --bundle --format=iife --target=es2018 --outfile=resources/dist/:package_name.js --minify",
+        "build:demo": "npm run build:demo:css && npm run build:demo:js",
+        "build:demo:css": "mkdir -p workbench/public/build && tailwindcss -i workbench/resources/css/demo.css -o workbench/public/build/demo.css --minify",
+        "build:demo:js": "mkdir -p workbench/public/build && esbuild workbench/resources/js/demo.js --bundle --format=iife --target=es2018 --outfile=workbench/public/build/demo.js --minify"
+    },
+    "devDependencies": {
+        "@openai/codex": "^0.77.0",
+        "@tailwindcss/cli": "^4.1.18",
+        "animejs": "^4.2.2",
+        "blade-formatter": "^1.44.2",
+        "esbuild": "^0.27.1",
+        "eslint": "^9.36.0",
+        "eslint-plugin-unused-imports": "^4.2.0",
+        "playwright": "^1.57.0",
+        "prettier": "^3.7.4"
+    },
+    "dependencies": {
+        "alpinejs": "^3.15.3",
+        "tailwindcss": "^4.1.18"
+    }
+}

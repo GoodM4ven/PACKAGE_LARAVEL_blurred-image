@@ -1,0 +1,69 @@
+name: Format CSS and JS files
+
+on:
+  push:
+    branches: [dev]
+    paths:
+      - 'resources/css/**/*.css'
+      - 'resources/js/**/*.js'
+      - 'workbench/resources/**/*.css'
+      - 'workbench/resources/**/*.js'
+  pull_request:
+    branches: [dev]
+    paths:
+      - 'resources/css/**/*.css'
+      - 'resources/js/**/*.js'
+      - 'workbench/resources/**/*.css'
+      - 'workbench/resources/**/*.js'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 20
+          cache: npm
+
+      - uses: actions/setup-php@v4
+        with:
+          php-version: 8.3
+
+      - name: Install Composer dependencies
+        run: composer install --prefer-dist --no-progress --no-suggest
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Prettier
+        run: npm run format:prettier
+
+      - name: Run tests
+        run: composer test
+
+      - name: Check for formatting changes
+        id: changes
+        run: |
+          if git diff --quiet; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Commit and push formatted files
+        if: steps.changes.outputs.changed == 'true' && github.event_name == 'push'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -m "chore: format CSS/JS files [skip ci]"
+          git push

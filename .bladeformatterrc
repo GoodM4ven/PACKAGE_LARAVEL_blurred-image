@@ -1,0 +1,8 @@
+{
+    "noMultipleEmptyLines": true,
+    "wrapAttributes": "force-expand-multiline",
+    "wrapLineLength": 120,
+    "sortHtmlAttributes": "code-guide",
+    "sortTailwindcssClasses": true,
+    "indentInnerHtml": false
+}

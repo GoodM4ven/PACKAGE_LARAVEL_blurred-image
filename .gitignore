@@ -1,0 +1,13 @@
+/.phpunit.cache
+/build
+/coverage
+/node_modules
+/vendor
+.phpunit.result.cache
+composer.lock
+package-lock.json
+npm-debug.log
+_ide_helper.php
+_ide_helper_models.php
+phpunit.xml
+phpstan.neon
