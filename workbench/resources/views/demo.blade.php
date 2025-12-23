@@ -157,8 +157,7 @@
                         image-classes="rounded-2xl"
                         :is-display-enforced="true"
                     >
-                        <div
-                            class="absolute inset-0 bg-linear-to-t from-slate-950/65 via-slate-900/30 to-transparent">
+                        <div class="bg-linear-to-t absolute inset-0 from-slate-950/65 via-slate-900/30 to-transparent">
                         </div>
                         <div class="relative flex h-full flex-col justify-between gap-6 p-6 md:p-8">
                             <div class="space-y-3">
