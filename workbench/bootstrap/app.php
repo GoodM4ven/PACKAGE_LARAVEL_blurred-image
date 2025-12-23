@@ -12,7 +12,7 @@ $app = Application::configure(basePath: $APP_BASE_PATH ?? realpath(__DIR__.'/..'
         commands: __DIR__.'/../routes/console.php',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        $middleware->validateCsrfTokens(except: ['/livewire/*']);
+        // $middleware->validateCsrfTokens(except: ['/livewire/*']);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

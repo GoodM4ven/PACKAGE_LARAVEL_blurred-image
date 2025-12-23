@@ -1,18 +1,23 @@
 {
-    "name": ":vendor_slug/:package_slug",
-    "description": ":package_description",
+    "name": "goodm4ven/blurred-image",
+    "description": "An elegant wrapper around Blurhash for the TALL stack",
     "keywords": [
+        "goodm4ven",
         "laravel",
         "tallstack",
-        ":vendor_slug",
-        ":package_slug"
+        "blurhash",
+        "blur",
+        "image",
+        "placeholder",
+        "loading",
+        "blurred-image"
     ],
-    "homepage": "https://github.com/:vendor_slug/:package_slug",
+    "homepage": "https://github.com/goodm4ven/PACKAGE_LARAVEL_blurred-image",
     "license": "MIT",
     "authors": [
         {
-            "name": ":author_name",
-            "email": "author@domain.com",
+            "name": "GoodM4ven",
+            "email": "goodm4ven@proton.me",
             "role": "Developer"
         }
     ],
@@ -21,7 +26,6 @@
         "goodm4ven/anvil": "^1.0",
         "goodm4ven/tailwind-merge": "^1.0",
         "laravel/boost": "^1.8",
-        "livewire/livewire": "^3.7",
         "illuminate/contracts": "^11.0||^12.0",
         "illuminate/support": "^11.0||^12.0",
         "spatie/laravel-package-tools": "^1.16"
@@ -29,6 +33,7 @@
     "require-dev": {
         "larastan/larastan": "^3.0",
         "laravel/pint": "^1.14",
+        "livewire/livewire": "^3.7",
         "nunomaduro/collision": "^8.8",
         "orchestra/testbench": "^10.0.0||^9.0.0",
         "pestphp/pest": "^4.0",
@@ -37,17 +42,17 @@
         "pestphp/pest-plugin-laravel": "^4.0",
         "phpstan/extension-installer": "^1.4",
         "phpstan/phpstan-deprecation-rules": "^2.0",
-        "phpstan/phpstan-phpunit": "^2.0"
+        "phpstan/phpstan-phpunit": "^2.0",
+        "spatie/laravel-medialibrary": "^11.0"
     },
     "autoload": {
         "psr-4": {
-            "VendorName\\Skeleton\\": "src/",
-            "VendorName\\Skeleton\\Database\\Factories\\": "database/factories/"
+            "GoodMaven\\BlurredImage\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "VendorName\\Skeleton\\Tests\\": "tests/",
+            "GoodMaven\\BlurredImage\\Tests\\": "tests/",
             "Workbench\\App\\": "workbench/app/",
             "Workbench\\Database\\Factories\\": "workbench/database/factories/",
             "Workbench\\Database\\Seeders\\": "workbench/database/seeders/"
@@ -83,7 +88,7 @@
             "@analyse"
         ],
         "publishfront": [
-            "@php vendor/bin/testbench vendor:publish --tag=:package_slug-assets --force"
+            "@php vendor/bin/testbench vendor:publish --tag=blurred-image-assets --force"
         ],
         "serve": [
             "Composer\\Config::disableProcessTimeout",
@@ -113,10 +118,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "VendorName\\Skeleton\\SkeletonServiceProvider"
+                "GoodMaven\\BlurredImage\\BlurredImageServiceProvider"
             ],
             "aliases": {
-                "Skeleton": "VendorName\\Skeleton\\Facades\\Skeleton"
+                "BlurredImage": "GoodMaven\\BlurredImage\\Facades\\BlurredImage"
             }
         }
     },

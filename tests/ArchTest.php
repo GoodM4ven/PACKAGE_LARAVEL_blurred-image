@@ -16,7 +16,7 @@ arch('it will not use debugging functions')
     ->each->not->toBeUsed();
 
 arch('it uses strict typing everywhere')
-    ->expect('VendorName\\Skeleton')
+    ->expect('GoodMaven\\BlurredImage')
     ->toUseStrictTypes();
 
 test('it will not point to dependency development versions', function () {

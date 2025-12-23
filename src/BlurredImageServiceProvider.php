@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace VendorName\Skeleton;
+namespace GoodMaven\BlurredImage;
 
 use GoodMaven\Anvil\Fixes\RegisterLaravelBoosterJsonSchemaFix;
+use GoodMaven\BlurredImage\Commands\GenerateBlurredImageCommand;
 use Illuminate\Support\Facades\Blade;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use VendorName\Skeleton\Commands\SkeletonCommand;
 
-class SkeletonServiceProvider extends PackageServiceProvider
+class BlurredImageServiceProvider extends PackageServiceProvider
 {
     public function configurePackage(Package $package): void
     {
@@ -20,24 +20,23 @@ class SkeletonServiceProvider extends PackageServiceProvider
          * More info: https://github.com/spatie/laravel-package-tools
          */
         $package
-            ->name('skeleton')
+            ->name('blurred-image')
             ->hasConfigFile()
-            ->hasMigration('create_migration_table_name_table')
-            ->hasAssets()
             ->hasViews()
-            ->hasViewComponents(':vendor_slug', ':package_name')
-            ->hasCommand(SkeletonCommand::class);
+            ->hasAssets()
+            ->hasViewComponents('goodmaven', 'blurred-image')
+            ->hasCommand(GenerateBlurredImageCommand::class);
     }
 
     public function packageRegistered(): void
     {
         RegisterLaravelBoosterJsonSchemaFix::activate();
 
-        $this->app->singleton(Skeleton::class, fn(): Skeleton => new Skeleton);
+        $this->app->singleton(BlurredImage::class, fn (): BlurredImage => new BlurredImage);
     }
 
     public function packageBooted(): void
     {
-        Blade::anonymousComponentPath(__DIR__ . '/../resources/views/components', ':vendor_slug');
+        Blade::anonymousComponentPath(__DIR__.'/../resources/views/components', 'goodmaven');
     }
 }

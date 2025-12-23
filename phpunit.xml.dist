@@ -16,7 +16,7 @@
     backupStaticProperties="false"
 >
     <testsuites>
-        <testsuite name=":vendor_name Test Suite">
+        <testsuite name="GoodM4ven Test Suite">
             <directory>tests</directory>
         </testsuite>
     </testsuites>

@@ -1,16 +1,30 @@
 <div align="center">بسم الله الرحمن الرحيم</div>
 <div align="left">
 
-# :package_name
+# blurred-image
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/:vendor_slug/:package_slug.svg?style=for-the-badge&color=gray)](https://packagist.org/packages/:vendor_slug/:package_slug)
-[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/:vendor_slug/:package_slug/pest.yml?branch=main&label=tests&style=for-the-badge&color=forestgreen)](https://github.com/:vendor_slug/:package_slug/actions?query=workflow%3Apest+branch%3Amain)
-[![Coverage Status](https://img.shields.io/codecov/c/github/:vendor_slug/:package_slug/main?style=for-the-badge&color=purple)](https://codecov.io/gh/:vendor_slug/:package_slug)
-[![Total Downloads](https://img.shields.io/packagist/dt/:vendor_slug/:package_slug.svg?style=for-the-badge&color=blue)](https://packagist.org/packages/:vendor_slug/:package_slug)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/goodm4ven/blurred-image.svg?style=for-the-badge&color=gray)](https://packagist.org/packages/goodm4ven/blurred-image)
+[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/goodm4ven/blurred-image/pest.yml?branch=main&label=tests&style=for-the-badge&color=forestgreen)](https://github.com/goodm4ven/blurred-image/actions?query=workflow%3Apest+branch%3Amain)
+[![Coverage Status](https://img.shields.io/codecov/c/github/goodm4ven/blurred-image/main?style=for-the-badge&color=purple)](https://codecov.io/gh/goodm4ven/blurred-image)
+[![Total Downloads](https://img.shields.io/packagist/dt/goodm4ven/blurred-image.svg?style=for-the-badge&color=blue)](https://packagist.org/packages/goodm4ven/blurred-image)
 
 <img src="./.github/images/banner.png">
 
-:package_description
+An elegant wrapper around [Blurhash](https://blurha.sh) for the [TALL stack](https://tallstack.dev), so Laravel projects can show colorful blurred placeholders while the real image loads.
+
+
+## How it works
+
+1. Generate a tiny blurred thumbnail for the image you want to render. You can do that via the Artisan command, the `BlurredImage` facade, or by registering a conversion through Spatie Media Library.
+2. Pass both the final image URL (or the associated Media Library model+collection) and the thumbnail URL to the [Blade component](https://laravel.com/docs/blade) called `blurred-image`.
+3. The component:
+   - Renders an empty gray canvas immediately.
+   - Sends the thumbnail through Blurhash to animate a colorful, blurred version of the image.
+   - Replaces the blurhash with the real image once it has fully intersected the viewport or finished downloading, depending on your configuration.
+
+Once configured, the component handles the placeholder animation for you so you can focus on content.
+
+https://github.com/user-attachments/assets/7b4a9b4c-d899-46cb-bd23-3d901008ecd4
 
 
 ## Installation
@@ -18,84 +32,155 @@
 Install the package with [`Composer`](https://getcomposer.org/):
 
 ```bash
-composer require :vendor_slug/:package_slug
+composer require goodm4ven/blurred-image
 ```
 
-Publish the assets they are copied to `public/vendor/:package_slug`.
+If you use [Spatie's Laravel Media Library](https://spatie.be/docs/laravel-medialibrary/) and want the `model`/`collection` scenario, install that package and add the `HasBlurredImages` trait to your model so `addBlurredThumbnailConversion` conversion method becomes available:
 
 ```bash
-php artisan vendor:publish --tag=":package_slug-assets"
+composer require spatie/laravel-medialibrary
 ```
 
-You can publish and run the migrations using:
+```php
+use GoodMaven\BlurredImage\Concerns\HasBlurredImages;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+
+class User extends Model implements HasMedia
+{
+    use InteractsWithMedia;
+    use HasBlurredImages;
+
+    public function registerMediaCollections(): void
+    {
+        $this
+            ->addMediaCollection('profile-picture')
+            ->singleFile()
+            ->registerMediaConversions(function (Media $media) {
+                $this->addBlurredThumbnailConversion();
+            });
+    }
+}
+```
+
+Publish the assets so the JavaScript helper, CSS, and placeholder images are copied to `public/vendor/blurred-image`.
 
 ```bash
-php artisan vendor:publish --tag=":package_slug-migrations"
-php artisan migrate
+php artisan vendor:publish --tag="blurred-image-assets"
 ```
+
+> [!WARNING]
+> Note that [AlpineJS](https://alpinejs.dev) and its [Intersect plugin](https://alpinejs.dev/plugins/intersect) are not bundled with these assets.
 
 You may also publish additional resources to tailor the package to your project:
 
-- Config file to adjust defaults package settings:
+- Config file (to adjust defaults such as `conversion_name` and the component flags):
   ```bash
-  php artisan vendor:publish --tag=":package_slug-config"
+  php artisan vendor:publish --tag="blurred-image-config"
   ```
 
-  - Check the current configurations in [here](config/:package_slug.php).
+  - Check the current [configurations](config/blurred-image.php) for more settings.
 
-- Views (if you need to override the Blade views):
+- Views (if you need to override the Blade template):
   ```bash
-  php artisan vendor:publish --tag=":package_slug-views"
+  php artisan vendor:publish --tag="blurred-image-views"
   ```
+
+### Notes
+
+- **Static assets**: Generate a `*-blurred-thumbnail.*` file next to your source image with `php artisan blurred-image:generate <imagePath>` so the blurhash can render client-side.
+- **Media Library collections**: Always sync `conversion_name` with the config by using `addBlurredThumbnailConversion` from the `HasBlurredImages` trait.
+- **Intersection/delay**: Set `is_eager_loaded` to preload the image or leave it `false` to wait for intersection; adjust `is_display_enforced` if the final image should appear before an intersection callback.
 
 
 ## Usage
 
-```php
-$instance = new \VendorName\Skeleton();
-echo $instance->somethingNonStatic();
-// OR
-\VendorName\Skeleton\Facades\Skeleton::somethingStatic();
+- **Load both [AlpineJS](https://alpinejs.dev) and its [Intersect plugin](https://alpinejs.dev/plugins/intersect) before using the component.**
+
+- Generate a blurred thumbnail before the first render:
+  ```bash
+  php artisan blurred-image:generate storage/app/public/example.jpg
+  ```
+  ```php
+  use GoodMaven\BlurredImage\Facades\BlurredImage;
+
+  BlurredImage::generate(storage_path('app/public/example.jpg'));
+  ```
+
+### Use cases overview
+
+Use the `blurred-image` component in two primary ways:
+
+1. **Static assets**: Pass explicit image and thumbnail URLs for banners, seeded data, etc.
+2. **Media Library**: Provide a model and collection, letting the component read the conversion registered via `HasBlurredImages`. Use `mediaIndex` to select from multiple media items.
+
+Extra options to consider:
+
+- **Slot overlays**: Place foreground content inside the component slot so your UI sits atop the blurhash and final image.
+- **Intersection tuning**: Toggle `is_eager_loaded` to preload the image, toggle `is_display_enforced` to reveal the final image before intersection fires.
+
+### 1. Render with explicit paths
+
+```blade
+<x-goodmaven::blurred-image
+    :imagePath="asset('images/hero.jpg')"
+    :thumbnailImagePath="asset('images/hero-blurred-thumbnail.jpg')"
+    :isDisplayEnforced="true"
+    alt="Coastal trail"
+/>
 ```
+
+### 2. Render from the Media Library
+
+Attach media to a model that uses `HasBlurredImages` and its conversion method:
+
+```php
+$user = User::first();
+
+$user
+    ->addMedia($pathToImage)
+    ->preservingOriginal()
+    ->toMediaCollection('profile-picture');
+```
+
+```blade
+<x-goodmaven::blurred-image
+    :model="$user"
+    :collection="'profile-picture'"
+    :mediaIndex="0"
+/>
+```
+
+### Extra: Slot overlays and intersection tweaks
+
+```blade
+<x-goodmaven::blurred-image
+    :image-path="asset('images/poster.jpg')"
+    :thumbnail-image-path="asset('images/poster-blurred-thumbnail.jpg')"
+    :is-eager-loaded="false"
+    :is-display-enforced="false"
+    width-class="w-full"
+    height-class="h-[520px]"
+>
+    <div class="absolute inset-0 bg-linear-to-t from-black/60"></div>
+    <div class="relative z-10 p-6 text-white">
+        <p class="text-lg font-semibold">Deferred reveal</p>
+        <p class="text-sm text-white/70">Blurhash shows immediately; the full image waits for an intersection.</p>
+    </div>
+</x-goodmaven::blurred-image>
+```
+
+Configuration for flags such as `is_eager_loaded`, `is_display_enforced`, and the `conversion_name` lives in the configuration file.
 
 
 ## Development
 
-- Just like Spatie's, you shuold run [configure.php](./configure.php) script to rename the template to your package. 
+This package was initiated based on my [Laravel package template](https://github.com/goodm4ven/TEMPLATE_PACKAGE_TALL/blob/main/README.md#development) that is built on top of [Spatie's](https://github.com/spatie/package-skeleton-laravel). Make sure to read the docs for both.
 
-- Since the package is utilizing [Orchestra Testbench](https://packages.tools) for the testing environment, its configuration file [testbench.yaml](testbench.yaml) should be looked at.
-- Running the Laravel Boost MCP server is done with `./vendor/bin/testbench boost:mcp` instead of `php artisan boost:mcp` or optionally via VSC command prompts.
-  - Normally, VSC users should have their MCP client pointing at `./vendor/bin/testbench boost:mcp`. (Check [.vscode/mcp.json](.vscode/mcp.json))
-  - HOWEVER, I have consistent configuration in [`laravel-boost-mcp.sh`](./laravel-boost-mcp.sh) file to look for both application setup's boost as well as the package's. And that's why we're pointing to that Bash file to handle the redirection.
+### Tasks
 
-### Codex MCP Connection
-
-If you're using ChatGPT Codex in VSC or whatever, make sure your `config.toml` has at least the following:
-
-```toml
-[mcp_servers.laravel-boost]
-command = "./laravel-boost-mcp.sh"
-```
-
-**I was only able to get it to work using the `@openai/cli` package ran via `npm`, and the VSC extension wan't able to establish a connection for some reason... Still, the VSC extension is very useful to ask when the environment is broken and retain full access to project files.**
-
-### Workbench Laravel Environment
-
-Keep in mind the following when using Workbench:
-  - Run `./vendor/bin/testbench` instead of `artisan` for Laravel commands; maybe you'd create also an system terminal alias for it, I use `bench`.
-    - Composer `scripts` listed in [composer.json](./composer.json) utilize it for the commands.
-    - After running `composer serve`, visit `http://localhost:8000` to see the demo page in action.
-  - Service providers are managed through [workbench/bootstrap/providers.php](./workbench/bootstrap/providers.php) array.
-  - Environment variables are defined in [testbench.yaml](./testbench.yaml) file.
-
-### Testing
-
-```bash
-composer test
-```
-
-> [!NOTE]
-> For code coverage add `--coverage`, and for faster runs add `--parallel`.
+- // TODO Improve tests or rework them to avoid CI failing sometimes after tracing the cause
+- // TODO Rework the demo Livewire component setup to load more images into the page, from both DB and fake-urls, and visualize the benifit
 
 
 ## Support
@@ -103,28 +188,14 @@ composer test
 Support ongoing package maintenance as well as the development of **other projects** through [sponsorship](https://github.com/sponsors/GoodM4ven) or one-time [donations](https://github.com/sponsors/GoodM4ven?frequency=one-time&sponsor=GoodM4ven) if you prefer.
 
 ### Credits
-- [Blade Formatter](https://github.com/shufo/blade-formatter)
-- [Larastan](https://github.com/larastan/larastan)
-- [Prettier](https://github.com/prettier/prettier)
-- [Pest](https://github.com/pestphp/pest-plugin-laravel)
-- [Playwrite](https://playwrite.dev)
-- [Orchestra](https://packages.tools)
-- [Composer](https://getcomposer.org)
-- [NPM](https://npmjs.com)
-- [ESLint](https://eslint.org)
-- [AnimeJS](https://animejs.com)
-- [PHP](https://php.net)
+- Inspired by [Blurhash](https://github.com/woltapp/blurhash).
 - [TALL Stack Community](https://tallstack.dev)
 - [TailwindCSS](https://tailwindcss.com)
 - [AlpineJS](https://alpinejs.dev)
-- [Livewire](https://livewire.laravel.com)
 - [Laravel](https://laravel.com)
+- [Laravel Media Library](https://github.com/spatie/laravel-medialibrary)
 - [Spatie Team](https://github.com/Spatie)
-- [VSC Codium](https://vscodium.com)
 - [ChatGPT & Codex](https://developers.openai.com/codex)
-- [Packagist](https://packagist.org)
-- [Codecov](https://codecov.com)
-- [Github Actions](https://github.com/actions)
 - [GoodM4ven](https://github.com/GoodM4ven)
 - [All Contributors](../../contributors)
 

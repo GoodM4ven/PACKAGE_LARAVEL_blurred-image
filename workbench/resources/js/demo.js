@@ -1,8 +1,16 @@
 import { Alpine } from '../../vendor/livewire/livewire/dist/livewire.esm';
-// import Alpine from 'alpinejs'; // ! Use when Alpine only is needed
 import { animate } from 'animejs';
+import intersect from '@alpinejs/intersect';
 
 window.Alpine = Alpine;
 window.Animate = animate;
 
-// Alpine.start(); // ! Use when Alpine only is needed
+Alpine.plugin(intersect);
+
+document.addEventListener('DOMContentLoaded', () => {
+    if (document.documentElement.classList.contains('js-ready')) {
+        return;
+    }
+
+    document.documentElement.classList.add('js-ready');
+});

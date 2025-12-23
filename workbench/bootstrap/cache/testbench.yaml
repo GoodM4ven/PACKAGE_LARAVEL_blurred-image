@@ -1,0 +1,32 @@
+laravel: ./workbench
+
+workbench:
+  welcome: false
+  install: true
+  discovers:
+    web: true
+    views: true
+    factories: true
+  build:
+    - asset-publish # vendor:publish --tag=laravel-assets --force
+    - create-sqlite-db
+    - migrate:refresh:
+        --force: true
+    - storage:link:
+        --force: true
+
+env:
+  APP_ENV: local
+  APP_URL: http://localhost:8000
+  APP_KEY: base64:spp4AQiR2SP4atzM2Ql0Z7Am7FYGeHD8ziaKVrflDvs=
+  APP_DEBUG: true
+  DB_CONNECTION: sqlite
+  DB_DATABASE: 'database/database.sqlite'
+  # DB_DATABASE: ':memory:'
+  CACHE_STORE: array
+  QUEUE_CONNECTION: sync
+  # SESSION_DRIVER: array
+  SESSION_DRIVER: file
+  SESSION_COOKIE: workbench_session
+  SESSION_SECURE_COOKIE: false
+  SESSION_SAME_SITE: lax
