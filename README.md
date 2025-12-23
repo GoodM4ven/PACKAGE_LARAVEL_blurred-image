@@ -8,9 +8,9 @@
 [![Coverage Status](https://img.shields.io/codecov/c/github/goodm4ven/PACKAGE_LARAVEL_blurred-image/main?style=for-the-badge&color=purple)](https://codecov.io/gh/goodm4ven/PACKAGE_LARAVEL_blurred-image)
 [![Total Downloads](https://img.shields.io/packagist/dt/goodm4ven/blurred-image.svg?style=for-the-badge&color=blue)](https://packagist.org/packages/goodm4ven/blurred-image)
 
-<img src="./.github/images/banner.png">
-
 An elegant wrapper around [Blurhash](https://blurha.sh) for the [TALL stack](https://tallstack.dev), so Laravel projects can show colorful blurred placeholders while the real image loads.
+
+<img src="./.github/images/banner.png">
 
 https://github.com/user-attachments/assets/704b4a8a-55d7-4a2d-bb28-d41b3301bca5
 
