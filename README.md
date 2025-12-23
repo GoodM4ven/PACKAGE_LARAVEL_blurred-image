@@ -12,6 +12,8 @@
 
 An elegant wrapper around [Blurhash](https://blurha.sh) for the [TALL stack](https://tallstack.dev), so Laravel projects can show colorful blurred placeholders while the real image loads.
 
+https://github.com/user-attachments/assets/704b4a8a-55d7-4a2d-bb28-d41b3301bca5
+
 
 ## How it works
 
@@ -23,8 +25,6 @@ An elegant wrapper around [Blurhash](https://blurha.sh) for the [TALL stack](htt
    - Replaces the blurhash with the real image once it has fully intersected the viewport or finished downloading, depending on your configuration.
 
 Once configured, the component handles the placeholder animation for you so you can focus on content.
-
-https://github.com/user-attachments/assets/704b4a8a-55d7-4a2d-bb28-d41b3301bca5
 
 
 ## Installation
