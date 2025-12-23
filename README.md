@@ -24,7 +24,7 @@ An elegant wrapper around [Blurhash](https://blurha.sh) for the [TALL stack](htt
 
 Once configured, the component handles the placeholder animation for you so you can focus on content.
 
-https://github.com/user-attachments/assets/7b4a9b4c-d899-46cb-bd23-3d901008ecd4
+https://github.com/user-attachments/assets/704b4a8a-55d7-4a2d-bb28-d41b3301bca5
 
 
 ## Installation
