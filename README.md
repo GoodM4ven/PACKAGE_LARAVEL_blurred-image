@@ -68,10 +68,12 @@ Publish the assets so the JavaScript helper, CSS, and placeholder images are cop
 ```bash
 php artisan vendor:publish --tag="blurred-image-assets"
 ```
+</div>
 
 > [!WARNING]
 > Note that [AlpineJS](https://alpinejs.dev) and its [Intersect plugin](https://alpinejs.dev/plugins/intersect) are not bundled with these assets.
 
+<div align="left">
 You may also publish additional resources to tailor the package to your project:
 
 - Config file (to adjust defaults such as `conversion_name` and the component flags):
