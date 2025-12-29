@@ -178,7 +178,7 @@ Configuration for flags such as `is_eager_loaded`, `is_display_enforced`, and th
 
 </div>
 
-> [!CRITICAL]
+> [!IMPORTANT]
 > If the parent element, that contains the component, **doesn’t have an explicit `height`**, like being `absolute` or whatever, **you MUST explicitely set the `heightClass` yourself**; like providing `aspect-[4/3]` or `h-48` classes. And ensure a proper `width` too. You can check the props defaults at the top of [blurred-image.blade.php](./resources/views/components/blurred-image.blade.php) file.
 
 <div align="left">
