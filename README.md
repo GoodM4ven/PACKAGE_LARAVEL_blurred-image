@@ -174,7 +174,7 @@ $user
 
 Configuration for flags such as `is_eager_loaded`, `is_display_enforced`, and the `conversion_name` lives in the configuration file.
 
-### Important Edge Case
+### Edge Case
 
 </div>
 
