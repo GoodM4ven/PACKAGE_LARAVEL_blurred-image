@@ -70,7 +70,7 @@
     $containerClass = twMerge(
         $widthClass,
         $heightClass,
-        'relative 2xl:mx-auto overflow-hidden rounded-2xl bg-gray-500 image-classes',
+        'relative 2xl:mx-auto overflow-hidden bg-gray-500 image-classes',
         $containerClasses,
         $imageClasses,
     );
