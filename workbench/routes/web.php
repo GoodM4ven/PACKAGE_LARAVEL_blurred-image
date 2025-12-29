@@ -8,15 +8,15 @@ use Workbench\App\Models\User;
 
 Route::get('/', function () {
     $imagePath = '/images/asset.jpg';
-    $thumbnailPath = '/images/asset-blurred-thumbnail.jpg';
+    $thumbnailPath = '/images/asset-blur-thumbnail.jpg';
     $profileImagePath = '/images/profile.jpg';
-    $profileThumbnailPath = '/images/profile-thumbnail.jpg';
+    $profileThumbnailPath = '/images/profile-blur-thumbnail.jpg';
     $innerContentImagePath = '/images/inner-content.jpg';
-    $innerContentThumbnailPath = '/images/inner-content-thumbnail.jpg';
+    $innerContentThumbnailPath = '/images/inner-content-blur-thumbnail.jpg';
     $intersectedFullyImagePath = '/images/intersected-fully.jpg';
-    $intersectedFullyThumbnailPath = '/images/intersected-fully-thumbnail.jpg';
+    $intersectedFullyThumbnailPath = '/images/intersected-fully-blur-thumbnail.jpg';
     $delayedImagePath = '/images/delayed.jpg';
-    $delayedThumbnailPath = '/images/delayed-thumbnail.jpg';
+    $delayedThumbnailPath = '/images/delayed-blur-thumbnail.jpg';
 
     // @phpstan-ignore-next-line
     $demoUser = User::query()->firstOrCreate(

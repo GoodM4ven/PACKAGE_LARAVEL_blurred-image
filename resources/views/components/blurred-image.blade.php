@@ -42,6 +42,18 @@
     $thumbnailLink = $selectedMedia?->getUrl($hasConversion ? $conversion : $conversionName) ?: $thumbnailImagePath;
     $finalMediaLink = $selectedMedia ? $selectedMedia->getUrl('') : $imagePath;
 
+    if (!$thumbnailLink && is_string($finalMediaLink) && $finalMediaLink !== '') {
+        $thumbnailLink = (static function (string $path, string $conversionName): ?string {
+            $pattern = '/^(.*?)(\\.[^.\\/?#]+)((?:\\?.*)?(?:#.*)?)$/';
+
+            if (!preg_match($pattern, $path, $matches)) {
+                return null;
+            }
+
+            return "{$matches[1]}-{$conversionName}{$matches[2]}" . ($matches[3] ?? '');
+        })($finalMediaLink, $conversionName);
+    }
+
     if (!$thumbnailLink && !$finalMediaLink) {
         if (config('blurred-image.throws_exception')) {
             throw new \Exception('Blurred Image exception: Image not found.');

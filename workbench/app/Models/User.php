@@ -22,7 +22,6 @@ class User extends Authenticatable implements HasMedia
     use HasFactory;
 
     use InteractsWithMedia;
-
     use Notifiable;
 
     /**

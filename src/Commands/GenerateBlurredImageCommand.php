@@ -73,7 +73,7 @@ class GenerateBlurredImageCommand extends Command
 
         $filename = pathinfo($path, PATHINFO_FILENAME);
         $extension = pathinfo($path, PATHINFO_EXTENSION);
-        $thumbnailPath = pathinfo($path, PATHINFO_DIRNAME).DIRECTORY_SEPARATOR."{$filename}-thumbnail.{$extension}";
+        $thumbnailPath = pathinfo($path, PATHINFO_DIRNAME).DIRECTORY_SEPARATOR."{$filename}-".config('blurred-image.conversion_name').".{$extension}";
 
         $image->format(strtolower($extension))->save($thumbnailPath);
 

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Workbench\App\Models\User;
 
 uses(RefreshDatabase::class);
@@ -88,7 +88,7 @@ it('includes fallback details when the image links are broken', function () {
 BLADE,
         [
             'imagePath' => asset('images/missing.jpg'),
-            'thumbnailPath' => asset('images/missing-thumbnail.jpg'),
+            'thumbnailPath' => asset('images/missing-blur-thumbnail.jpg'),
         ],
     );
 
@@ -113,13 +113,36 @@ it('renders direct file paths in the markup', function () {
 BLADE,
         [
             'imagePath' => asset('images/asset.jpg'),
-            'thumbnailPath' => asset('images/asset-blurred-thumbnail.jpg'),
+            'thumbnailPath' => asset('images/asset-blur-thumbnail.jpg'),
         ],
     );
 
     visit($path)
         ->assertSourceHas('asset.jpg')
-        ->assertSourceHas('asset-blurred-thumbnail.jpg');
+        ->assertSourceHas('asset-blur-thumbnail.jpg');
+});
+
+it('infers the thumbnail path from the image path using the configured conversion name', function () {
+    $path = registerBlurredImageRoute(
+        <<<'BLADE'
+<section data-testid="blurred-image">
+    <x-goodmaven::blurred-image
+        :image-path="$imagePath"
+        width-class="w-full"
+        height-class="h-64"
+        :is-display-enforced="true"
+        :is-eager-loaded="true"
+    />
+</section>
+BLADE,
+        [
+            'imagePath' => asset('images/asset.jpg'),
+        ],
+    );
+
+    visit($path)
+        ->assertSourceHas('asset.jpg')
+        ->assertSourceHas('asset-'.config('blurred-image.conversion_name').'.jpg');
 });
 
 it('renders media library URLs in the markup', function () {
@@ -153,6 +176,6 @@ BLADE,
     }
 
     if (is_string($blurredUrl)) {
-        $page->assertSourceHas('blurred-thumbnail');
+        $page->assertSourceHas('blur-thumbnail');
     }
 });

@@ -90,7 +90,7 @@ You may also publish additional resources to tailor the package to your project:
 
 ### Notes
 
-- **Static assets**: Generate a `*-blurred-thumbnail.*` file next to your source image with `php artisan blurred-image:generate <imagePath>` so the blurhash can render client-side.
+- **Static assets**: Generate a `*-blur-thumbnail.*` file next to your source image with `php artisan blurred-image:generate <imagePath>` so the blurhash can render client-side.
 - **Media Library collections**: Always sync `conversion_name` with the config by using `addBlurredThumbnailConversion` from the `HasBlurredImages` trait.
 - **Intersection/delay**: Set `is_eager_loaded` to preload the image or leave it `false` to wait for intersection; adjust `is_display_enforced` if the final image should appear before an intersection callback.
 
@@ -126,7 +126,7 @@ Extra options to consider:
 ```blade
 <x-goodmaven::blurred-image
     :imagePath="asset('images/hero.jpg')"
-    :thumbnailImagePath="asset('images/hero-blurred-thumbnail.jpg')"
+    :thumbnailImagePath="asset('images/hero-blur-thumbnail.jpg')"
     :isDisplayEnforced="true"
     alt="Coastal trail"
 />
@@ -158,7 +158,7 @@ $user
 ```blade
 <x-goodmaven::blurred-image
     :image-path="asset('images/poster.jpg')"
-    :thumbnail-image-path="asset('images/poster-blurred-thumbnail.jpg')"
+    :thumbnail-image-path="asset('images/poster-blur-thumbnail.jpg')"
     :is-eager-loaded="false"
     :is-display-enforced="false"
     width-class="w-full"

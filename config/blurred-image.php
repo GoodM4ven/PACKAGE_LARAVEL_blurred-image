@@ -20,7 +20,7 @@ return [
      |
     */
 
-    'conversion_name' => 'blurred-thumbnail',
+    'conversion_name' => 'blur-thumbnail',
 
     /*
      |--------------------------------------------------------------------------
