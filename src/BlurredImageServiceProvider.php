@@ -6,6 +6,7 @@ namespace GoodMaven\BlurredImage;
 
 use GoodMaven\Anvil\Fixes\RegisterLaravelBoosterJsonSchemaFix;
 use GoodMaven\BlurredImage\Commands\GenerateBlurredImageCommand;
+use GoodMaven\BlurredImage\Commands\OptimizeImageCommand;
 use Illuminate\Support\Facades\Blade;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
@@ -25,7 +26,8 @@ class BlurredImageServiceProvider extends PackageServiceProvider
             ->hasViews()
             ->hasAssets()
             ->hasViewComponents('goodmaven', 'blurred-image')
-            ->hasCommand(GenerateBlurredImageCommand::class);
+            ->hasCommand(GenerateBlurredImageCommand::class)
+            ->hasCommand(OptimizeImageCommand::class);
     }
 
     public function packageRegistered(): void

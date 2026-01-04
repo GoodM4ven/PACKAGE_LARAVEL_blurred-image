@@ -62,4 +62,16 @@ return [
 
     'throws_exception' => false,
 
+    /*
+     |--------------------------------------------------------------------------
+     | Optimized Image Generation
+     |--------------------------------------------------------------------------
+     |
+     | Should we run Spatie's image opitimization process on both the blurred-image,
+     | and the original image upon using our generation command?
+     |
+     */
+
+    'is_generation_optimized' => true,
+
 ];
