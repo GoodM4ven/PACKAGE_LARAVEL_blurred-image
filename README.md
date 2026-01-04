@@ -91,6 +91,7 @@ You may also publish additional resources to tailor the package to your project:
 ### Notes
 
 - **Static assets**: Generate a `*-blur-thumbnail.*` file next to your source image with `php artisan blurred-image:generate <imagePath>` so the blurhash can render client-side.
+- **Optimization**: `is_generation_optimized` is enabled by default and runs `blurred-image:optimize` on both the source image and the generated thumbnail whenever you call the generator command.
 - **Media Library collections**: Always sync `conversion_name` with the config by using `addBlurredThumbnailConversion` from the `HasBlurredImages` trait.
 - **Intersection/delay**: Set `is_eager_loaded` to preload the image or leave it `false` to wait for intersection; adjust `is_display_enforced` if the final image should appear before an intersection callback.
 
@@ -102,6 +103,8 @@ You may also publish additional resources to tailor the package to your project:
 - Generate a blurred thumbnail before the first render:
   ```bash
   php artisan blurred-image:generate storage/app/public/example.jpg
+  # or, to only optimize an existing image manually
+  php artisan blurred-image:optimize storage/app/public/example.jpg
   ```
   ```php
   use GoodMaven\BlurredImage\Facades\BlurredImage;

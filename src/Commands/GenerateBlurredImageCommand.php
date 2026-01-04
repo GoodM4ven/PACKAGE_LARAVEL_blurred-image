@@ -77,8 +77,36 @@ class GenerateBlurredImageCommand extends Command
 
         $image->format(strtolower($extension))->save($thumbnailPath);
 
+        if ($this->shouldOptimizeGeneration()) {
+            $this->comment('Optimizing original and blurred images...');
+
+            if (! $this->optimizeGeneratedImages($path, $thumbnailPath)) {
+                return self::FAILURE;
+            }
+        }
+
         $this->info("Blurred thumbnail generated successfully at: [{$thumbnailPath}].");
 
         return self::SUCCESS;
+    }
+
+    protected function shouldOptimizeGeneration(): bool
+    {
+        return (bool) config('blurred-image.is_generation_optimized', true);
+    }
+
+    protected function optimizeGeneratedImages(string ...$paths): bool
+    {
+        foreach ($paths as $path) {
+            $exitCode = $this->call(OptimizeImageCommand::class, [
+                'path' => $path,
+            ]);
+
+            if ($exitCode !== self::SUCCESS) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
