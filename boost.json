@@ -7,6 +7,12 @@
         "vscode"
     ],
     "guidelines": [
-        "filament/filament"
+        "tailwindcss/tailwindcss",
+        "alpinejs/alpinejs",
+        "laravel/framework",
+        "livewire/livewire",
+        "filament/filament",
+        "pint/pint",
+        "pest/pest"
     ]
 }
