@@ -10,6 +10,7 @@ on:
       - 'phpunit.xml.dist'
   pull_request:
     branches: [dev]
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -62,14 +63,6 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: '20'
-
-      - name: Cache Playwright browsers
-        uses: actions/cache@v5
-        with:
-          path: ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ hashFiles('package-lock.json', 'package.json') }}
-          restore-keys: |
-            ${{ runner.os }}-playwright-
 
       - name: Install npm dependencies
         run: npm install

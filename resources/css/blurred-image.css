@@ -1,4 +1,7 @@
-@import 'tailwindcss' source(none);
+@layer theme, base, components, utilities;
+
+@import 'tailwindcss/theme.css' layer(theme) theme(inline);
+@import 'tailwindcss/utilities.css' layer(utilities) source(none);
 
 @source "../js/**/*.js";
 @source "../views/**/*.blade.php";
