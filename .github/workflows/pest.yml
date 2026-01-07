@@ -10,6 +10,7 @@ on:
       - 'phpunit.xml.dist'
   pull_request:
     branches: [dev]
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
