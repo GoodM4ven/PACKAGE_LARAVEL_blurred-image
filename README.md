@@ -208,7 +208,6 @@ This package was initiated based on my [Laravel package template](https://github
 
 ### Tasks
 
-- // TODO Improve tests or rework them to avoid CI failing sometimes after tracing the cause
 - // TODO Rework the demo Livewire component setup to load more images into the page, from both DB and fake-urls, and visualize the benifit
 
 
