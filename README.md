@@ -70,6 +70,7 @@ php artisan vendor:publish --tag="blurred-image-assets"
 ```
 </div>
 
+
 > [!NOTE]
 > You should add the **enforced** asset publishing process to your app composer's workflow:
   ```
@@ -82,8 +83,10 @@ php artisan vendor:publish --tag="blurred-image-assets"
               "@php artisan vendor:publish --tag=blurred-image-assets --force --ansi"
   ```
 
+
 > [!WARNING]
 > Note that [AlpineJS](https://alpinejs.dev) and its [Intersect plugin](https://alpinejs.dev/plugins/intersect) are not bundled with these assets.
+
 
 <div align="left">
 You may also publish additional resources to tailor the package to your project:
