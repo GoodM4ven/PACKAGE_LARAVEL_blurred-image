@@ -118,8 +118,6 @@ You may also publish additional resources to tailor the package to your project:
 - Generate a blurred thumbnail before the first render:
   ```bash
   php artisan blurred-image:generate storage/app/public/example.jpg
-  # or, to only optimize an existing image manually
-  php artisan blurred-image:optimize storage/app/public/example.jpg
   ```
   ```php
   use GoodMaven\BlurredImage\Facades\BlurredImage;
