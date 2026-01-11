@@ -9,11 +9,17 @@ use RuntimeException;
 
 class BlurredImage
 {
-    public function generate(string $existingImagePath): void
+    public function generate(string $path, ?bool $processDirectory = null): void
     {
-        $exitCode = Artisan::call('blurred-image:generate', [
-            'path' => $existingImagePath,
-        ]);
+        $arguments = [
+            'path' => $path,
+        ];
+
+        if ($processDirectory ?? is_dir($path)) {
+            $arguments['--directory'] = true;
+        }
+
+        $exitCode = Artisan::call('blurred-image:generate', $arguments);
 
         if ($exitCode !== 0) {
             throw new RuntimeException(
