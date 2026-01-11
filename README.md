@@ -118,11 +118,15 @@ You may also publish additional resources to tailor the package to your project:
 - Generate a blurred thumbnail before the first render:
   ```bash
   php artisan blurred-image:generate storage/app/public/example.jpg
+  // or for an entire directory, in a nested manner!
+  php artisan blurred-image:generate storage/app/public/images --directory
   ```
   ```php
   use GoodMaven\BlurredImage\Facades\BlurredImage;
 
   BlurredImage::generate(storage_path('app/public/example.jpg'));
+  // Or for the inner directories as well...
+  BlurredImage::generate(storage_path('app/public/images'));
   ```
 
 ### Use cases overview
@@ -206,6 +210,7 @@ This package was initiated based on my [Laravel package template](https://github
 
 ### Tasks
 
+- // TODO Extract the validated image file types to a configurable setting
 - // TODO Rework the demo Livewire component setup to load more images into the page, from both DB and fake-urls, and visualize the benifit
 
 
