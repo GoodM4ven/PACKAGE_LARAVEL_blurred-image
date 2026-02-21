@@ -16,22 +16,22 @@ concurrency:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 5
     strategy:
       fail-fast: true
       matrix:
-        php: [8.3]
+        include:
+          - os: ubuntu-latest
+            php: 8.4
+            laravel: 12.*
+            testbench: 10.*
+          - os: ubuntu-latest
+            php: 8.3
+            laravel: 11.*
+            testbench: 9.*
 
-    name: P${{ matrix.php }} - ubuntu-latest
-    env:
-      APP_ENV: testing
-      APP_DEBUG: false
-      CACHE_STORE: array
-      DB_CONNECTION: sqlite
-      DB_DATABASE: ':memory:'
-      QUEUE_CONNECTION: sync
-      SESSION_DRIVER: array
+    name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.os }}
 
     steps:
       - name: Checkout code
@@ -44,16 +44,18 @@ jobs:
           extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick, fileinfo
           coverage: pcov
 
+      - name: Setup problem matchers
+        run: |
+          echo "::add-matcher::${{ runner.tool_cache }}/php.json"
+          echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
+
       - name: Install dependencies
-        run: composer install --prefer-dist --no-interaction --no-progress
+        run: |
+          composer require --dev "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
+          composer update --prefer-dist --no-interaction
 
       - name: Prepare coverage directory
         run: mkdir -p build/coverage
-
-      - name: Prepare application
-        run: |
-          cp .env.example .env
-          php artisan key:generate --force --no-interaction
 
       - name: Setup Node.js
         uses: actions/setup-node@v6
@@ -61,10 +63,7 @@ jobs:
           node-version: '20'
 
       - name: Install npm dependencies
-        run: npm ci
-
-      - name: Build frontend assets
-        run: npm run build
+        run: npm install
 
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
