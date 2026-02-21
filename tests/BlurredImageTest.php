@@ -12,8 +12,10 @@ it('exposes sensible default configuration', function () {
 
 it('generates a blurred thumbnail via the artisan command', function () {
     $sourcePath = storage_path('app/testing/blurred-image-source.jpg');
+    $optimizedSourcePath = storage_path('app/testing/blurred-image-source.webp');
     $conversionName = config('blurred-image.conversion_name');
     $thumbnailPath = storage_path("app/testing/blurred-image-source-{$conversionName}.jpg");
+    $optimizedThumbnailPath = storage_path("app/testing/blurred-image-source-{$conversionName}.webp");
 
     if (! is_dir(dirname($sourcePath))) {
         mkdir(dirname($sourcePath), 0755, true);
@@ -23,8 +25,10 @@ it('generates a blurred thumbnail via the artisan command', function () {
     $originalMtime = time() - 10;
     touch($sourcePath, $originalMtime);
 
-    if (is_file($thumbnailPath)) {
-        unlink($thumbnailPath);
+    foreach ([$thumbnailPath, $optimizedSourcePath, $optimizedThumbnailPath] as $path) {
+        if (is_file($path)) {
+            unlink($path);
+        }
     }
 
     try {
@@ -33,20 +37,20 @@ it('generates a blurred thumbnail via the artisan command', function () {
         ])
             ->expectsOutputToContain('Generating thumbnail...')
             ->expectsOutputToContain('Optimizing original and blurred images...')
-            ->expectsOutputToContain("Image optimized successfully at: [{$sourcePath}].")
-            ->expectsOutputToContain("Image optimized successfully at: [{$thumbnailPath}].")
-            ->expectsOutputToContain('Blurred thumbnail generated successfully')
+            ->expectsOutputToContain("Image optimized successfully at: [{$optimizedSourcePath}].")
+            ->expectsOutputToContain("Image optimized successfully at: [{$optimizedThumbnailPath}].")
+            ->expectsOutputToContain(
+                "Blurred thumbnail generated successfully at: [{$optimizedThumbnailPath}].",
+            )
             ->assertExitCode(0);
 
-        expect(is_file($thumbnailPath))->toBeTrue()
-            ->and(filemtime($sourcePath))->toBeGreaterThan($originalMtime);
+        expect(is_file($optimizedThumbnailPath))->toBeTrue()
+            ->and(filemtime($optimizedSourcePath))->toBeGreaterThan($originalMtime);
     } finally {
-        if (is_file($sourcePath)) {
-            unlink($sourcePath);
-        }
-
-        if (is_file($thumbnailPath)) {
-            unlink($thumbnailPath);
+        foreach ([$sourcePath, $optimizedSourcePath, $thumbnailPath, $optimizedThumbnailPath] as $path) {
+            if (is_file($path)) {
+                unlink($path);
+            }
         }
     }
 });
@@ -64,8 +68,13 @@ it('skips optimization when the generation flag is disabled', function () {
     $originalMtime = time() - 20;
     touch($sourcePath, $originalMtime);
 
-    if (is_file($thumbnailPath)) {
-        unlink($thumbnailPath);
+    $optimizedSourcePath = storage_path('app/testing/blurred-image-unoptimized-source.webp');
+    $optimizedThumbnailPath = storage_path("app/testing/blurred-image-unoptimized-source-{$conversionName}.webp");
+
+    foreach ([$thumbnailPath, $optimizedSourcePath, $optimizedThumbnailPath] as $path) {
+        if (is_file($path)) {
+            unlink($path);
+        }
     }
 
     config()->set('blurred-image.is_generation_optimized', false);
@@ -81,18 +90,17 @@ it('skips optimization when the generation flag is disabled', function () {
         expect(is_file($thumbnailPath))->toBeTrue()
             ->and(filemtime($sourcePath))->toBe($originalMtime);
     } finally {
-        if (is_file($sourcePath)) {
-            unlink($sourcePath);
-        }
-
-        if (is_file($thumbnailPath)) {
-            unlink($thumbnailPath);
+        foreach ([$sourcePath, $optimizedSourcePath, $thumbnailPath, $optimizedThumbnailPath] as $path) {
+            if (is_file($path)) {
+                unlink($path);
+            }
         }
     }
 });
 
 it('optimizes an image via the artisan command', function () {
     $sourcePath = storage_path('app/testing/blurred-image-optimize-source.jpg');
+    $optimizedPath = storage_path('app/testing/blurred-image-optimize-source.webp');
 
     if (! is_dir(dirname($sourcePath))) {
         mkdir(dirname($sourcePath), 0755, true);
@@ -102,17 +110,25 @@ it('optimizes an image via the artisan command', function () {
     $originalMtime = time() - 30;
     touch($sourcePath, $originalMtime);
 
+    if (is_file($optimizedPath)) {
+        unlink($optimizedPath);
+    }
+
     try {
         artisan('blurred-image:optimize', [
             'path' => $sourcePath,
         ])
-            ->expectsOutputToContain("Image optimized successfully at: [{$sourcePath}].")
+            ->expectsOutputToContain("Image optimized successfully at: [{$optimizedPath}].")
             ->assertExitCode(0);
 
-        expect(filemtime($sourcePath))->toBeGreaterThan($originalMtime);
+        expect(is_file($sourcePath))->toBeFalse()
+            ->and(is_file($optimizedPath))->toBeTrue()
+            ->and(filemtime($optimizedPath))->toBeGreaterThan($originalMtime);
     } finally {
-        if (is_file($sourcePath)) {
-            unlink($sourcePath);
+        foreach ([$sourcePath, $optimizedPath] as $path) {
+            if (is_file($path)) {
+                unlink($path);
+            }
         }
     }
 });

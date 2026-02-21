@@ -69,7 +69,7 @@ BLADE,
 
     visit($path)
         ->assertSourceHas('empty-media-placeholder.png')
-        ->assertSourceHas('empty-media-placeholder-thumb.png');
+        ->assertSourceHas('empty-media-placeholder-thumbnail.png');
 });
 
 it('includes fallback details when the image links are broken', function () {

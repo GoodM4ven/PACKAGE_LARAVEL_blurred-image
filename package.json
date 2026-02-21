@@ -14,7 +14,7 @@
         "build:demo:js": "mkdir -p workbench/public/build && esbuild workbench/resources/js/demo.js --bundle --format=iife --target=es2018 --outfile=workbench/public/build/demo.js --minify"
     },
     "devDependencies": {
-        "@openai/codex": "^0.80.0",
+        "@openai/codex": "^0.104.0",
         "@tailwindcss/cli": "^4.1.18",
         "animejs": "^4.2.2",
         "blade-formatter": "^1.44.2",

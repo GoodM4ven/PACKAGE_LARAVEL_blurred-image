@@ -6,7 +6,7 @@ return [
     \GoodMaven\BlurredImage\BlurredImageServiceProvider::class,
     \GoodMaven\TailwindMerge\TailwindMergeServiceProvider::class,
     \Workbench\App\Providers\TestableWorkbenchServiceProvider::class,
-    // ? Packages during tests
+    \Laravel\Boost\BoostServiceProvider::class,
+    \Livewire\LivewireServiceProvider::class,
     \Spatie\MediaLibrary\MediaLibraryServiceProvider::class,
-    // \Livewire\LivewireServiceProvider::class,
 ];

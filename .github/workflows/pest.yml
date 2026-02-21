@@ -1,15 +1,13 @@
 name: Run Pest for testing
 
 on:
-  push:
+  pull_request:
     branches: [dev, main]
     paths:
       - '**/*.php'
       - 'composer.json'
       - 'composer.lock'
       - 'phpunit.xml.dist'
-  pull_request:
-    branches: [dev]
   workflow_dispatch:
 
 concurrency:
@@ -69,9 +67,6 @@ jobs:
 
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
-
-      - name: List Installed Dependencies
-        run: composer show -D
 
       - name: Execute tests
         run: vendor/bin/pest --coverage --coverage-clover=build/coverage/clover.xml

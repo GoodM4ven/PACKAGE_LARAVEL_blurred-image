@@ -1,5 +1,5 @@
-name: Bug Report
-description: Report an Issue or Bug with the Package
+name: Report an issue
+description: Report a bug in this package
 title: "[Bug]: "
 labels: ["bug"]
 body:

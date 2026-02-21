@@ -106,7 +106,7 @@ You may also publish additional resources to tailor the package to your project:
 ### Notes
 
 - **Static assets**: Generate a `*-blur-thumbnail.*` file next to your source image with `php artisan blurred-image:generate <imagePath>` so the blurhash can render client-side.
-- **Optimization**: `is_generation_optimized` is enabled by default and runs `blurred-image:optimize` on both the source image and the generated thumbnail whenever you call the generator command.
+- **Optimization**: `is_generation_optimized` is enabled by default and runs `blurred-image:optimize` on both the source image and the generated thumbnail whenever you call the generator command. The optimize command converts supported inputs to `.webp` first, then optimizes the resulting WebP image.
 - **Media Library collections**: Always sync `conversion_name` with the config by using `addBlurredThumbnailConversion` from the `HasBlurredImages` trait.
 - **Intersection/delay**: Set `is_eager_loaded` to preload the image or leave it `false` to wait for intersection; adjust `is_display_enforced` if the final image should appear before an intersection callback.
 
