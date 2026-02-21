@@ -12,20 +12,12 @@ const blurDimensions = {
 
 const imageRequestCache = new Map();
 
-const fetchImageBlobUrl = (src) => {
+const resolveImageSource = (src) => {
     if (imageRequestCache.has(src)) {
         return imageRequestCache.get(src);
     }
 
-    const request = fetch(src, { cache: 'no-store' })
-        .then((response) => {
-            if (!response.ok) {
-                throw new Error(`[blurred-image] failed to fetch ${src}`);
-            }
-
-            return response.blob();
-        })
-        .then((blob) => URL.createObjectURL(blob));
+    const request = Promise.resolve(src);
 
     imageRequestCache.set(src, request);
 
@@ -291,10 +283,10 @@ document.addEventListener('alpine:init', () => {
 
             this.imageRequested = true;
 
-            fetchImageBlobUrl(this.link)
-                .then((blobUrl) => {
+            resolveImageSource(this.link)
+                .then((source) => {
                     this.imageDecoded = true;
-                    this.imageSrc = blobUrl;
+                    this.imageSrc = source;
                     this.updateVisibility();
                 })
                 .catch((error) => {

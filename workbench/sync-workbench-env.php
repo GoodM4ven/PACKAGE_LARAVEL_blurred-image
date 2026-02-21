@@ -27,6 +27,8 @@ if ($variables === []) {
 }
 
 writeEnvFiles($variables, $workbenchPath);
+syncWorkbenchLinks($workbenchPath);
+ensureWorkbenchGitignoreEntries($workbenchPath);
 
 fwrite(STDOUT, sprintf(
     // "Synced %d environment variables to %s/.env and %s/.env.example\n",
@@ -112,6 +114,89 @@ function writeEnvFiles(array $variables, string $workbenchPath): void
 
         file_put_contents($target, implode(PHP_EOL, $lines).PHP_EOL);
     }
+}
+
+function syncWorkbenchLinks(string $workbenchPath): void
+{
+    $links = [
+        '.ai' => '../.ai',
+        '.agents' => '../.agents',
+        'AGENTS.md' => '../AGENTS.md',
+        'boost.json' => '../boost.json',
+    ];
+
+    foreach ($links as $linkName => $target) {
+        $linkPath = $workbenchPath.'/'.$linkName;
+        ensureSymlink($target, $linkPath);
+    }
+}
+
+function ensureWorkbenchGitignoreEntries(string $workbenchPath): void
+{
+    $gitignorePath = $workbenchPath.'/.gitignore';
+    $requiredEntries = [
+        '/.agents',
+        '/.ai',
+        'AGENTS.md',
+        'boost.json',
+    ];
+
+    $existingLines = file_exists($gitignorePath)
+        ? (file($gitignorePath, FILE_IGNORE_NEW_LINES) ?: [])
+        : [];
+
+    foreach ($requiredEntries as $entry) {
+        if (! in_array($entry, $existingLines, true)) {
+            $existingLines[] = $entry;
+        }
+    }
+
+    file_put_contents($gitignorePath, implode(PHP_EOL, $existingLines).PHP_EOL);
+}
+
+function ensureSymlink(string $target, string $linkPath): void
+{
+    if (is_link($linkPath) && readlink($linkPath) === $target) {
+        return;
+    }
+
+    removePath($linkPath);
+
+    $created = @symlink($target, $linkPath);
+
+    if (! $created) {
+        fwrite(STDERR, "Warning: failed to create symlink {$linkPath} -> {$target}\n");
+    }
+}
+
+function removePath(string $path): void
+{
+    if (is_link($path) || is_file($path)) {
+        @unlink($path);
+
+        return;
+    }
+
+    if (! is_dir($path)) {
+        return;
+    }
+
+    $items = new RecursiveIteratorIterator(
+        new RecursiveDirectoryIterator($path, FilesystemIterator::SKIP_DOTS),
+        RecursiveIteratorIterator::CHILD_FIRST
+    );
+
+    foreach ($items as $item) {
+        if ($item->isDir()) {
+            @rmdir($item->getPathname());
+
+            continue;
+        }
+
+        @unlink($item->getPathname());
+    }
+
+    @rmdir($path);
 }
 
 function trimQuotes(string $value): string

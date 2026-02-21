@@ -15,7 +15,7 @@ class OptimizeImageCommand extends Command
 {
     protected $signature = 'blurred-image:optimize {path : Path of the source image or directory} {--directory : Process all images within the directory recursively}';
 
-    protected $description = 'Optimize an image or directory in place using Spatie Image.';
+    protected $description = 'Convert images to WebP and optimize them using Spatie Image.';
 
     public function handle(): int
     {
@@ -79,16 +79,34 @@ class OptimizeImageCommand extends Command
 
         try {
             $this->comment("Optimizing image: [{$path}]...");
-            Image::load($path)->optimize()->save($path);
+
+            $webpPath = $this->convertImageToWebp($path);
+            Image::load($webpPath)->optimize()->save($webpPath);
         } catch (Throwable $exception) {
             $this->error('Unable to optimize the image: '.$exception->getMessage());
 
             return self::FAILURE;
         }
 
-        $this->info("Image optimized successfully at: [{$path}].");
+        $this->info("Image optimized successfully at: [{$webpPath}].");
 
         return self::SUCCESS;
+    }
+
+    protected function convertImageToWebp(string $path): string
+    {
+        if ($this->isWebpPath($path)) {
+            return $path;
+        }
+
+        $webpPath = $this->buildWebpPath($path);
+        Image::load($path)->orientation()->format('webp')->save($webpPath);
+
+        if (is_file($path) && ! unlink($path)) {
+            throw new \RuntimeException("Unable to remove source image after WebP conversion: {$path}");
+        }
+
+        return $webpPath;
     }
 
     /**
@@ -132,5 +150,18 @@ class OptimizeImageCommand extends Command
     protected function supportedImageMimeTypes(): array
     {
         return ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    }
+
+    protected function isWebpPath(string $path): bool
+    {
+        return strtolower((string) pathinfo($path, PATHINFO_EXTENSION)) === 'webp';
+    }
+
+    protected function buildWebpPath(string $path): string
+    {
+        $directory = (string) pathinfo($path, PATHINFO_DIRNAME);
+        $filename = (string) pathinfo($path, PATHINFO_FILENAME);
+
+        return $directory.DIRECTORY_SEPARATOR."{$filename}.webp";
     }
 }

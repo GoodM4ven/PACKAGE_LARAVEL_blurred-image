@@ -1,3 +1,10 @@
+/.agents
+/.ai
+/bootstrap/cache/testbench.yaml.backup
+/public/storage
+/vendor
 .env
 .env.example
+AGENTS.md
+boost.json
 composer.lock

@@ -113,6 +113,7 @@ class GenerateBlurredImageCommand extends Command
 
         $thumbnailPath = $this->buildThumbnailPath($path);
         $image->format($this->getImageFormat($path))->save($thumbnailPath);
+        $finalThumbnailPath = $thumbnailPath;
 
         if ($this->shouldOptimizeGeneration()) {
             $this->comment('Optimizing original and blurred images...');
@@ -120,9 +121,11 @@ class GenerateBlurredImageCommand extends Command
             if (! $this->optimizeGeneratedImages($path, $thumbnailPath)) {
                 return self::FAILURE;
             }
+
+            $finalThumbnailPath = $this->buildOptimizedPath($thumbnailPath);
         }
 
-        $this->info("Blurred thumbnail generated successfully at: [{$thumbnailPath}].");
+        $this->info("Blurred thumbnail generated successfully at: [{$finalThumbnailPath}].");
 
         return self::SUCCESS;
     }
@@ -167,6 +170,20 @@ class GenerateBlurredImageCommand extends Command
     protected function getImageFormat(string $path): string
     {
         return strtolower(pathinfo($path, PATHINFO_EXTENSION));
+    }
+
+    protected function buildOptimizedPath(string $path): string
+    {
+        $extension = strtolower((string) pathinfo($path, PATHINFO_EXTENSION));
+
+        if ($extension === 'webp') {
+            return $path;
+        }
+
+        $directory = (string) pathinfo($path, PATHINFO_DIRNAME);
+        $filename = (string) pathinfo($path, PATHINFO_FILENAME);
+
+        return $directory.DIRECTORY_SEPARATOR."{$filename}.webp";
     }
 
     protected function isSupportedImage(string $path): bool

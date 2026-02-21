@@ -34,7 +34,7 @@
 
 @php
     $placeholder = asset('vendor/blurred-image/empty-media-placeholder.png');
-    $placeholderThumb = asset('vendor/blurred-image/empty-media-placeholder-thumb.png');
+    $placeholderThumb = asset('vendor/blurred-image/empty-media-placeholder-thumbnail.png');
     $conversionName = config('blurred-image.conversion_name');
 
     $selectedMedia = $media ?: ($model ? $model->getMedia($collection)->slice($mediaIndex, 1)->first() : null);
