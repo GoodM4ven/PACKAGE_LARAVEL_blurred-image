@@ -9,3 +9,9 @@ _ide_helper.php
 _ide_helper_models.php
 phpunit.xml
 phpstan.neon
+/.agents
+/.ai
+AGENTS.md
+boost.json
+CLUADE.md
+codex.config.json

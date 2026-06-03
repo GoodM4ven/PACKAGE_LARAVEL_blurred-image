@@ -3,7 +3,6 @@
         "codex"
     ],
     "editors": [
-        "codex",
         "vscode"
     ],
     "guidelines": [
