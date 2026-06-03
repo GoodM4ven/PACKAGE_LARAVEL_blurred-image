@@ -2,11 +2,18 @@
 
 declare(strict_types=1);
 
+use GoodMaven\BlurredImage\BlurredImageServiceProvider;
+use GoodMaven\TailwindMerge\TailwindMergeServiceProvider;
+use Laravel\Boost\BoostServiceProvider;
+use Livewire\LivewireServiceProvider;
+use Spatie\MediaLibrary\MediaLibraryServiceProvider;
+use Workbench\App\Providers\TestableWorkbenchServiceProvider;
+
 return [
-    \GoodMaven\BlurredImage\BlurredImageServiceProvider::class,
-    \GoodMaven\TailwindMerge\TailwindMergeServiceProvider::class,
-    \Workbench\App\Providers\TestableWorkbenchServiceProvider::class,
-    \Laravel\Boost\BoostServiceProvider::class,
-    \Livewire\LivewireServiceProvider::class,
-    \Spatie\MediaLibrary\MediaLibraryServiceProvider::class,
+    BlurredImageServiceProvider::class,
+    TailwindMergeServiceProvider::class,
+    TestableWorkbenchServiceProvider::class,
+    BoostServiceProvider::class,
+    LivewireServiceProvider::class,
+    MediaLibraryServiceProvider::class,
 ];
