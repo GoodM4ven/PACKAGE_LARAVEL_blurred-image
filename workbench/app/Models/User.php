@@ -13,12 +13,13 @@ use Illuminate\Notifications\Notifiable;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Workbench\Database\Factories\UserFactory;
 
 class User extends Authenticatable implements HasMedia
 {
     use HasBlurredImages;
 
-    /** @use HasFactory<\Workbench\Database\Factories\UserFactory> */
+    /** @use HasFactory<UserFactory> */
     use HasFactory;
 
     use InteractsWithMedia;

@@ -12,7 +12,7 @@ use Workbench\App\Models\User;
 /**
  * @template TModel of \Workbench\App\Models\User
  *
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<TModel>
+ * @extends Factory<TModel>
  */
 class UserFactory extends Factory
 {
@@ -31,7 +31,7 @@ class UserFactory extends Factory
     /**
      * Define the model's default state.
      *
-     * @return array<model-property<\Workbench\App\Models\User>, mixed>
+     * @return array<model-property<User>, mixed>
      */
     public function definition(): array
     {
