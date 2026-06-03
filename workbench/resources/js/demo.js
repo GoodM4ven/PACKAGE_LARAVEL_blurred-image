@@ -1,4 +1,4 @@
-import { Alpine } from '../../vendor/livewire/livewire/dist/livewire.esm';
+import { Alpine } from '../../../vendor/livewire/livewire/dist/livewire.esm';
 import { animate } from 'animejs';
 import intersect from '@alpinejs/intersect';
 
