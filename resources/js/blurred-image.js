@@ -99,19 +99,52 @@ document.addEventListener('alpine:init', () => {
         fullIntersectFeasible: true,
         fullIntersectSafetyMargin: 96,
         resizeHandler: null,
+        hashChangeHandler: null,
         hashReadyEventDispatched: false,
         revealEventDispatched: false,
+        _resolveDisplayEnforced() {
+            return typeof this.isDisplayEnforced === 'function'
+                ? this.isDisplayEnforced()
+                : this.isDisplayEnforced;
+        },
         init() {
             this.startGrayHold();
-            this.visible = this.isDisplayEnforced;
+
+            this.visible = this._resolveDisplayEnforced();
+
             this.evaluateFullIntersectionFeasibility();
             this.resizeHandler = () => this.evaluateFullIntersectionFeasibility();
             window.addEventListener('resize', this.resizeHandler, { passive: true });
 
+            if (typeof config.isDisplayEnforced === 'function') {
+                this.hashChangeHandler = () => {
+                    if (this._resolveDisplayEnforced()) {
+                        this.visible = true;
+                        if (!this.imageRequested) {
+                            this.requestImage();
+                        }
+                        this.updateVisibility();
+                    }
+                };
+                window.addEventListener('hashchange', this.hashChangeHandler, { passive: true });
+            }
+
             this.$nextTick(() => {
                 this.generateBlurImage(this.thumbnailLink, this.element);
-                if (this.isDisplayEnforced || this.isEagerLoaded) {
+                const canEagerLoad =
+                    this._resolveDisplayEnforced() ||
+                    (typeof this.isDisplayEnforced !== 'function' && this.isEagerLoaded);
+                if (canEagerLoad) {
                     this.requestImage();
+                }
+            });
+
+            this.$cleanup(() => {
+                if (this.resizeHandler) {
+                    window.removeEventListener('resize', this.resizeHandler);
+                }
+                if (this.hashChangeHandler) {
+                    window.removeEventListener('hashchange', this.hashChangeHandler);
                 }
             });
         },
@@ -217,11 +250,15 @@ document.addEventListener('alpine:init', () => {
             }, 600);
         },
         markVisible: function (state) {
-            if (this.isDisplayEnforced) {
+            if (this._resolveDisplayEnforced()) {
                 this.visible = true;
                 this.updateVisibility();
                 this.requestImage();
 
+                return;
+            }
+
+            if (typeof this.isDisplayEnforced === 'function') {
                 return;
             }
 
@@ -304,14 +341,17 @@ document.addEventListener('alpine:init', () => {
             this.showBlurhash = this.blurhashReady && this.grayHoldDone && !this.revealStarted;
 
             const finalLoaded = this.imgLoaded || this.imageFailed;
-            const isVisible = this.visible || this.isDisplayEnforced || this.isEagerLoaded;
+            const isVisible =
+                typeof this.isDisplayEnforced === 'function'
+                    ? this.visible || this._resolveDisplayEnforced()
+                    : this.visible || this._resolveDisplayEnforced() || this.isEagerLoaded;
 
             const canStartReveal =
                 !this.revealStarted &&
                 (this.blurhashReady || this.blurhashFailed) &&
                 this.blurhashHoldDone &&
                 finalLoaded &&
-                (this.visible || this.isDisplayEnforced);
+                (this.visible || this._resolveDisplayEnforced());
 
             if (!this.imageRequested && isVisible) {
                 this.requestImage();
