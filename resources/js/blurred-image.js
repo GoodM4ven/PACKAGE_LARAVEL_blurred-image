@@ -138,15 +138,14 @@ document.addEventListener('alpine:init', () => {
                     this.requestImage();
                 }
             });
-
-            this.$cleanup(() => {
-                if (this.resizeHandler) {
-                    window.removeEventListener('resize', this.resizeHandler);
-                }
-                if (this.hashChangeHandler) {
-                    window.removeEventListener('hashchange', this.hashChangeHandler);
-                }
-            });
+        },
+        destroy() {
+            if (this.resizeHandler) {
+                window.removeEventListener('resize', this.resizeHandler);
+            }
+            if (this.hashChangeHandler) {
+                window.removeEventListener('hashchange', this.hashChangeHandler);
+            }
         },
         getTestIdForEvent() {
             const root = this.element?.closest('[data-testid]');
