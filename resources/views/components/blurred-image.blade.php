@@ -7,6 +7,7 @@
     'isObjectCentered' => true,
     'isEagerLoaded' => config('blurred-image.is_eager_loaded'),
     'isDisplayEnforced' => config('blurred-image.is_display_enforced'),
+    'isDisplayEnforcedJs' => null,
     'conversion' => '',
     'model' => null,
     'mediaIndex' => 0,
@@ -93,7 +94,7 @@
             element: $el,
             fallbackLink: @js($placeholder),
             isEagerLoaded: @js($isEagerLoaded),
-            isDisplayEnforced: @js($isDisplayEnforced),
+            isDisplayEnforced: {{ $isDisplayEnforcedJs ?: '@js($isDisplayEnforced)' }},
         });"
         x-intersect:enter="typeof handlePartialEnter === 'function' ? handlePartialEnter() : markVisible(true)"
         x-intersect:enter.full="markVisible(true)"
