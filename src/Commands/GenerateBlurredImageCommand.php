@@ -14,7 +14,7 @@ use Spatie\Image\Image;
 
 class GenerateBlurredImageCommand extends Command
 {
-    protected $signature = 'blurred-image:generate {path : Path of the source image or directory} {--directory : Process all images within the directory recursively}';
+    protected $signature = 'blurred-image:generate {path : Path of the source image or directory}';
 
     protected $description = 'Generate a blurhash-friendly thumbnail for a given image or directory.';
 
@@ -29,7 +29,7 @@ class GenerateBlurredImageCommand extends Command
         }
 
         $path = (string) $this->argument('path');
-        $processDirectory = (bool) $this->option('directory');
+        $processDirectory = is_dir($path);
 
         $thumbnailWidth = (int) config('blurred-image.thumbnail_resolution.width', 208);
         $thumbnailHeight = (int) config('blurred-image.thumbnail_resolution.height', 117);

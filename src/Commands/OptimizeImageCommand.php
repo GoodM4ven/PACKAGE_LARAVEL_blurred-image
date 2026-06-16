@@ -13,7 +13,7 @@ use Throwable;
 
 class OptimizeImageCommand extends Command
 {
-    protected $signature = 'blurred-image:optimize {path : Path of the source image or directory} {--directory : Process all images within the directory recursively}';
+    protected $signature = 'blurred-image:optimize {path : Path of the source image or directory}';
 
     protected $description = 'Convert images to WebP and optimize them using Spatie Image.';
 
@@ -28,7 +28,7 @@ class OptimizeImageCommand extends Command
         }
 
         $path = (string) $this->argument('path');
-        $processDirectory = (bool) $this->option('directory');
+        $processDirectory = is_dir($path);
 
         if ($processDirectory) {
             if (! is_dir($path)) {
