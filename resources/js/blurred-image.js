@@ -100,6 +100,7 @@ document.addEventListener('alpine:init', () => {
         fullIntersectSafetyMargin: 96,
         resizeHandler: null,
         hashChangeHandler: null,
+        thumbnailRequested: false,
         hashReadyEventDispatched: false,
         revealEventDispatched: false,
         _resolveDisplayEnforced() {
@@ -120,6 +121,10 @@ document.addEventListener('alpine:init', () => {
                 this.hashChangeHandler = () => {
                     if (this._resolveDisplayEnforced()) {
                         this.visible = true;
+                        if (!this.thumbnailRequested) {
+                            this.thumbnailRequested = true;
+                            this.generateBlurImage(this.thumbnailLink, this.element);
+                        }
                         if (!this.imageRequested) {
                             this.requestImage();
                         }
@@ -130,10 +135,15 @@ document.addEventListener('alpine:init', () => {
             }
 
             this.$nextTick(() => {
-                this.generateBlurImage(this.thumbnailLink, this.element);
-                const canEagerLoad =
-                    this._resolveDisplayEnforced() ||
-                    (typeof this.isDisplayEnforced !== 'function' && this.isEagerLoaded);
+                const isFunctionGated = typeof this.isDisplayEnforced === 'function';
+                const isActive = this._resolveDisplayEnforced();
+
+                if (!isFunctionGated || isActive) {
+                    this.thumbnailRequested = true;
+                    this.generateBlurImage(this.thumbnailLink, this.element);
+                }
+
+                const canEagerLoad = isActive || (!isFunctionGated && this.isEagerLoaded);
                 if (canEagerLoad) {
                     this.requestImage();
                 }
